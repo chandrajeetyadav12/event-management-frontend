@@ -7,7 +7,7 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 
 import Input from "@/components/Input";
-
+import Link from "next/link";
 import {
   loginSchema,
   LoginFormData,
@@ -101,6 +101,14 @@ export default function LoginPage() {
               {error}
             </p>
           )}
+          <div className="text-right">
+  <Link
+    href="/forgot-password"
+    className="text-blue-500"
+  >
+    Forgot Password?
+  </Link>
+</div>
         </form>
       </div>
     </div>

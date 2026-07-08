@@ -1,5 +1,5 @@
 import { createSlice } from "@reduxjs/toolkit";
-import { registerUser, loginUser, logoutUser } from "./authThunk";
+import { registerUser, loginUser, logoutUser,forgotPassword,resetPassword } from "./authThunk";
 import Cookies from "js-cookie";
 interface AuthState {
   loading: boolean;
@@ -107,6 +107,64 @@ const authSlice = createSlice({
   state.loading = false;
   state.error = action.payload as string;
 })
+.addCase(
+  forgotPassword.pending,
+  (state) => {
+    state.loading = true;
+    state.error = null;
+    state.success = null;
+  }
+)
+
+.addCase(
+  forgotPassword.fulfilled,
+  (state, action) => {
+    state.loading = false;
+
+    state.success =
+      action.payload.data?.message ||
+      "Reset email sent successfully";
+  }
+)
+
+.addCase(
+  forgotPassword.rejected,
+  (state, action) => {
+    state.loading = false;
+
+    state.error =
+      action.payload as string;
+  }
+)
+.addCase(
+  resetPassword.pending,
+  (state) => {
+    state.loading = true;
+    state.error = null;
+    state.success = null;
+  }
+)
+
+.addCase(
+  resetPassword.fulfilled,
+  (state, action) => {
+    state.loading = false;
+
+    state.success =
+      action.payload.data?.message ||
+      "Password reset successful";
+  }
+)
+
+.addCase(
+  resetPassword.rejected,
+  (state, action) => {
+    state.loading = false;
+
+    state.error =
+      action.payload as string;
+  }
+)
   },
 });
 
