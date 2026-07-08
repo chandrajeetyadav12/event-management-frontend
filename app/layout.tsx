@@ -35,6 +35,9 @@ export default function RootLayout({
           <SocketListener />
           <Navbar />
           {children}
+          <footer className="mt-auto p-4 text-center text-gray-500 border-t border-gray-200 dark:border-gray-700">
+            &copy; {new Date().getFullYear()} Ticket Booking System. All rights reserved.
+          </footer>
         </ReduxProvider>
       </body>
     </html>
