@@ -26,6 +26,7 @@ import {
   AppDispatch,
   RootState,
 } from "@/store/store";
+import socket from "@/hooks/useSocket";
 
 export default function EventDetails() {
   const params =
@@ -66,6 +67,13 @@ export default function EventDetails() {
         params.id as string
       )
     );
+
+    // join socket room for this event to receive real-time updates
+    socket.emit("join-event", params.id);
+
+    return () => {
+      socket.emit("leave-event", params.id);
+    };
   }, [dispatch, params.id]);
 
   const handleBooking =

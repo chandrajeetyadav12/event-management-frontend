@@ -79,9 +79,14 @@ export default function BookingsPage() {
       ) : (
         <div className="grid gap-4">
           {bookings.map(
-            (booking: any) => (
+            (booking: any, idx: number) => (
               <div
-                key={booking._id}
+                key={
+                  booking._id ??
+                  (booking.eventId?._id
+                    ? `${booking.eventId._id}-${booking.createdAt}`
+                    : idx)
+                }
                 className="border rounded-lg p-5 shadow-sm"
               >
                 <h2 className="text-xl font-semibold">

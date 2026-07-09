@@ -27,7 +27,20 @@ const eventSlice =
   createSlice({
     name: "events",
     initialState,
-    reducers: {},
+    reducers: {
+      seatUpdated: (state, action) => {
+        const { eventId, availableSeats } = action.payload;
+        state.events = state.events.map((e: any) =>
+          e._id?.toString() === eventId?.toString()
+            ? { ...e, availableSeats }
+            : e
+        );
+
+        if (state.selectedEvent && state.selectedEvent._id?.toString() === eventId?.toString()) {
+          state.selectedEvent = { ...state.selectedEvent, availableSeats };
+        }
+      },
+    },
 
     extraReducers: (
       builder
@@ -125,5 +138,6 @@ const eventSlice =
         )
     },
   });
+export const { seatUpdated } = eventSlice.actions;
 
 export default eventSlice.reducer;

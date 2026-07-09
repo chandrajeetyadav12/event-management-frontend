@@ -20,7 +20,14 @@ const initialState: BookingState = {
 const bookingSlice = createSlice({
   name: "booking",
   initialState,
-  reducers: {},
+  reducers: {
+    addNewBooking: (state, action) => {
+      const { booking, isMine } = action.payload;
+      if (isMine) {
+        state.bookings.unshift(booking);
+      }
+    },
+  },
 
   extraReducers: (builder) => {
     builder
@@ -79,5 +86,6 @@ const bookingSlice = createSlice({
       )
   },
 });
+export const { addNewBooking } = bookingSlice.actions;
 
 export default bookingSlice.reducer;
