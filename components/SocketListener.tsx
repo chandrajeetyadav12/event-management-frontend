@@ -12,25 +12,29 @@ export default function SocketListener() {
   const currentUser = useSelector((state: RootState) => state.auth.user);
 
   useEffect(() => {
-    socket.on("connect", () => {
+    const handleConnect = () => {
       console.log("Connected:", socket.id);
-    });
+    };
 
-    socket.on("seat-updated", (data) => {
+    const handleSeatUpdated = (data: any) => {
       console.log("Seat Updated", data);
       dispatch(seatUpdated(data));
-    });
+    };
 
-    socket.on("new-booking", (data) => {
+    const handleNewBooking = (data: any) => {
       console.log("New Booking", data);
       const isMine = currentUser && currentUser._id?.toString() === data.userId?.toString();
       dispatch(addNewBooking({ booking: data, isMine }));
-    });
+    };
+
+    socket.on("connect", handleConnect);
+    socket.on("seat-updated", handleSeatUpdated);
+    socket.on("new-booking", handleNewBooking);
 
     return () => {
-      socket.off("connect");
-      socket.off("seat-updated");
-      socket.off("new-booking");
+      socket.off("connect", handleConnect);
+      socket.off("seat-updated", handleSeatUpdated);
+      socket.off("new-booking", handleNewBooking);
     };
   }, [dispatch, currentUser]);
 

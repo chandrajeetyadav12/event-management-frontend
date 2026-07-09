@@ -26,7 +26,7 @@ import {
   AppDispatch,
   RootState,
 } from "@/store/store";
-import socket from "@/hooks/useSocket";
+import { joinEventRoom, leaveEventRoom } from "@/hooks/useSocket";
 
 export default function EventDetails() {
   const params =
@@ -68,11 +68,10 @@ export default function EventDetails() {
       )
     );
 
-    // join socket room for this event to receive real-time updates
-    socket.emit("join-event", params.id);
+    joinEventRoom(params.id as string);
 
     return () => {
-      socket.emit("leave-event", params.id);
+      leaveEventRoom(params.id as string);
     };
   }, [dispatch, params.id]);
 
