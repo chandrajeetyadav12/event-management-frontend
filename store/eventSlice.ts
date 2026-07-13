@@ -5,7 +5,9 @@ import {
 import {
   fetchEventById,
   fetchEvents,
-  createNewEvent
+  createNewEvent,
+  updateEvent,
+  deleteEvent
 } from "./eventThunk";
 
 
@@ -136,6 +138,70 @@ const eventSlice =
               action.payload as string;
           }
         )
+        .addCase(
+  updateEvent.pending,
+  (state) => {
+    state.loading = true;
+  }
+)
+
+.addCase(
+  updateEvent.fulfilled,
+  (state, action) => {
+    state.loading = false;
+
+    state.events = state.events.map(
+      (event) =>
+        event._id ===
+        action.payload.data._id
+          ? action.payload.data
+          : event
+    );
+
+    state.selectedEvent =
+      action.payload.data;
+  }
+)
+
+.addCase(
+  updateEvent.rejected,
+  (state, action) => {
+    state.loading = false;
+
+    state.error =
+      action.payload as string;
+  }
+)
+
+.addCase(
+  deleteEvent.pending,
+  (state) => {
+    state.loading = true;
+  }
+)
+
+.addCase(
+  deleteEvent.fulfilled,
+  (state, action) => {
+    state.loading = false;
+
+    state.events =
+      state.events.filter(
+        (event) =>
+          event._id !== action.payload.id
+      );
+  }
+)
+
+.addCase(
+  deleteEvent.rejected,
+  (state, action) => {
+    state.loading = false;
+
+    state.error =
+      action.payload as string;
+  }
+)
     },
   });
 export const { seatUpdated } = eventSlice.actions;

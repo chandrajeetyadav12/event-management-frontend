@@ -3,7 +3,9 @@ import { createAsyncThunk } from "@reduxjs/toolkit";
 import {
   getAllEvents,
   getSingleEvent,
-  createEvent
+  createEvent,
+    updateEvent as updateEventService,
+  deleteEvent as deleteEventService,
 } from "@/services/event.service";
 
 export const fetchEvents =
@@ -64,3 +66,62 @@ export const createNewEvent =
       }
     }
   );
+
+  export const updateEvent = createAsyncThunk(
+  "events/update",
+  async (
+    {
+      id,
+      eventData,
+      token,
+    }: {
+      id: string;
+      eventData: any;
+      token: string;
+    },
+    thunkAPI
+  ) => {
+    try {
+      return await updateEventService(
+        id,
+        eventData,
+        token
+      );
+    } catch (error: any) {
+      return thunkAPI.rejectWithValue(
+        error.response?.data?.message
+      );
+    }
+  }
+);
+
+export const deleteEvent = createAsyncThunk(
+  "events/delete",
+  async (
+    {
+      id,
+      token,
+    }: {
+      id: string;
+      token: string;
+    },
+    thunkAPI
+  ) => {
+    try {
+      const response =
+        await deleteEventService(
+          id,
+          token
+        );
+
+      return {
+        id,
+        ...response,
+      };
+    } catch (error: any) {
+      return thunkAPI.rejectWithValue(
+        error.response?.data?.message
+      );
+    }
+  }
+);

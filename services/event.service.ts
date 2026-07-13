@@ -32,3 +32,37 @@ export const createEvent = async (
 
   return response.data;
 };
+
+export const updateEvent = async (
+  id: string,
+  eventData: any,
+  token: string
+) => {
+  const response = await api.put(
+    `/events/${id}`,
+    eventData,
+    {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    }
+  );
+
+  return response.data;
+};
+
+export const deleteEvent = async (
+  id: string,
+  token: string
+) => {
+  const response = await api.delete(
+    `/events/${id}`,
+    {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    }
+  );
+
+  return response.data;
+};
