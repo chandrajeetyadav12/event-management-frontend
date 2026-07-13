@@ -23,6 +23,11 @@ const user = useSelector(
   const handleDelete = async (
   id: string
 ) => {
+    const confirmed = window.confirm(
+    "Are you sure you want to delete this event?"
+  );
+
+  if (!confirmed) return;
   const result =
     await dispatch(
       deleteEvent({
