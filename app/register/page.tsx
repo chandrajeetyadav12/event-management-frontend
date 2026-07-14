@@ -8,6 +8,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 
 import Input from "@/components/Input";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import {
   registerSchema,
   RegisterFormData,
@@ -21,6 +22,7 @@ import {
 } from "@/store/store";
 
 export default function RegisterPage() {
+  const router = useRouter();
   const dispatch =
     useDispatch<AppDispatch>();
 
@@ -41,10 +43,16 @@ export default function RegisterPage() {
       zodResolver(registerSchema),
   });
 
-  const onSubmit = (
+  const onSubmit = async (
     data: RegisterFormData
   ) => {
-    dispatch(registerUser(data));
+    const result = await dispatch(registerUser(data));
+    if (registerUser.fulfilled.match(result)) {
+      alert(
+        "Registration Successful"
+      );
+      router.push("/login");
+    }
   };
 
   return (
