@@ -119,3 +119,29 @@ export const resetPassword = createAsyncThunk(
     }
   }
 );
+
+export const getProfile = createAsyncThunk(
+  "auth/profile",
+  async (
+    token: string,
+    { rejectWithValue }
+  ) => {
+    try {
+      const response = await api.get(
+        "/auth/profile",
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+
+      return response.data;
+    } catch (error: any) {
+      return rejectWithValue(
+        error.response?.data?.message ||
+          "Failed to fetch profile"
+      );
+    }
+  }
+);

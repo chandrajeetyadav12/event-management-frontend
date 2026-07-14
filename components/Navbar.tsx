@@ -56,6 +56,9 @@ export default function Navbar() {
                     {/* After Login */}
           {user && (
             <>
+              <Link href="/profile">
+                Profile
+              </Link>
               <Link href="/bookings">
                 My Bookings
               </Link>
@@ -113,7 +116,9 @@ export default function Navbar() {
               <Link href="/bookings">
                 My Bookings
               </Link>
-
+              <Link href="/profile">
+                Profile
+              </Link>
               {user.role === "admin" && (
                 <Link href="/events/create">
                   Create Event
