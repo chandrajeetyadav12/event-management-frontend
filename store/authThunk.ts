@@ -145,3 +145,43 @@ export const getProfile = createAsyncThunk(
     }
   }
 );
+
+export interface UpdateProfilePayload {
+  name: string;
+  email: string;
+}
+
+export const updateProfile = createAsyncThunk(
+  "auth/updateProfile",
+  async (
+       {
+      data,
+      token,
+    }: {
+      data: UpdateProfilePayload;
+      token: string;
+    },
+    // data: UpdateProfilePayload,
+    
+    { rejectWithValue }
+  ) => {
+    try {
+      const response = await api.put(
+        "/auth/profile",
+        data,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+
+      return response.data;
+    } catch (error: any) {
+      return rejectWithValue(
+        error.response?.data?.message ||
+          "Profile update failed"
+      );
+    }
+  }
+);

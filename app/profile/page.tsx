@@ -4,23 +4,31 @@ import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { AppDispatch, RootState } from "@/store/store";
 import { getProfile } from "@/store/authThunk";
-
+import Link from "next/dist/client/link";
+import Cookies from "js-cookie";
 export default function ProfilePage() {
   const dispatch = useDispatch<AppDispatch>();
 
   const { user, loading } = useSelector(
     (state: RootState) => state.auth
   );
+useEffect(() => {
+  const token =
+    Cookies.get("token");
 
-  const token = useSelector(
-    (state: RootState) => state.auth.token
-  );
+  if (token) {
+    dispatch(getProfile(token));
+  }
+}, [dispatch]);
+  // const token = useSelector(
+  //   (state: RootState) => state.auth.token
+  // );
 
-  useEffect(() => {
-    if (token) {
-      dispatch(getProfile(token));
-    }
-  }, [dispatch, token]);
+  // useEffect(() => {
+  //   if (token) {
+  //     dispatch(getProfile(token));
+  //   }
+  // }, [dispatch, token]);
 
   if (loading) {
     return (
@@ -103,9 +111,12 @@ export default function ProfilePage() {
 
             {/* Actions */}
             <div className="mt-8 flex flex-wrap gap-4">
-              <button className="bg-black text-white px-6 py-3 rounded-lg hover:opacity-90">
+              <Link
+                href="/profile/edit"
+                className="bg-black text-white px-6 py-3 rounded-lg hover:opacity-90 inline-block"
+              >
                 Edit Profile
-              </button>
+              </Link>
 
           
             </div>

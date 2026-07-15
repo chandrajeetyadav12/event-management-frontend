@@ -1,5 +1,5 @@
 import { createSlice } from "@reduxjs/toolkit";
-import { registerUser, loginUser, logoutUser,forgotPassword,resetPassword,getProfile } from "./authThunk";
+import { registerUser, loginUser, logoutUser,forgotPassword,resetPassword,getProfile,updateProfile } from "./authThunk";
 import Cookies from "js-cookie";
 interface AuthState {
   loading: boolean;
@@ -75,6 +75,13 @@ const authSlice = createSlice({
 
           state.token =
             action.payload.data.token;
+                Cookies.set(
+                  "token",
+                  action.payload.data.token,
+                  {
+                    expires: 7,
+                  }
+                );
           state.success =
             "Login successful!";
         }
@@ -185,6 +192,36 @@ const authSlice = createSlice({
 
 .addCase(
   getProfile.rejected,
+  (state, action) => {
+    state.loading = false;
+
+    state.error =
+      action.payload as string;
+  }
+)
+.addCase(
+  updateProfile.pending,
+  (state) => {
+    state.loading = true;
+    state.error = null;
+  }
+)
+
+.addCase(
+  updateProfile.fulfilled,
+  (state, action) => {
+    state.loading = false;
+
+    state.user =
+      action.payload.data;
+
+    state.success =
+      "Profile updated successfully";
+  }
+)
+
+.addCase(
+  updateProfile.rejected,
   (state, action) => {
     state.loading = false;
 
