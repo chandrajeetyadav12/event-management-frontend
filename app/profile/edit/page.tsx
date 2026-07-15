@@ -25,32 +25,17 @@ useEffect(() => {
   const token =
     Cookies.get("token");
 
-  console.log(
-    "COOKIE TOKEN:",
-    token
-  );
-
   if (token) {
     dispatch(getProfile(token));
   }
 }, [dispatch]);
-//   const token =
-//     useSelector(
-//       (state: RootState) =>
-//         state.auth.token
-//     );
+
 
   const {
     register,
     handleSubmit,
     reset,
   } = useForm();
-
-//   useEffect(() => {
-//     if (token) {
-//       dispatch(getProfile(token));
-//     }
-//   }, [dispatch, token]);
 
   useEffect(() => {
     if (user) {
