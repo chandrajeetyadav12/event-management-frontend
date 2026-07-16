@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 
 import {
   useDispatch,
@@ -18,9 +18,18 @@ import {
   RootState,
 } from "@/store/store";
 
+import { useDebounce } from "@/hooks/useDebounce";
+import { useDelayedLoading } from "@/hooks/useDelayedLoading";
+
 export default function EventsPage() {
   const dispatch =
     useDispatch<AppDispatch>();
+
+  const [searchInput, setSearchInput] =
+    useState("");
+
+  const debouncedSearch =
+    useDebounce(searchInput, 500);
 
   const {
     events,
@@ -30,13 +39,16 @@ export default function EventsPage() {
       state.events
   );
 
+  const delayedLoading =
+    useDelayedLoading(loading, 300);
+
   useEffect(() => {
     dispatch(
-      fetchEvents()
+      fetchEvents(debouncedSearch)
     );
-  }, [dispatch]);
+  }, [dispatch, debouncedSearch]);
 
-  if (loading) {
+  if (delayedLoading) {
     return (
       <h1>
         Loading Events...
@@ -50,18 +62,36 @@ export default function EventsPage() {
         Events
       </h1>
 
-      <div className="grid md:grid-cols-3 gap-5">
-        {events.map(
-          (event) => (
-            <EventCard
-              key={
-                event._id
-              }
-              event={event}
-            />
-          )
-        )}
+      <div className="mb-6">
+        <input
+          type="text"
+          placeholder="Search events by title..."
+          value={searchInput}
+          onChange={(e) =>
+            setSearchInput(e.target.value)
+          }
+          className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+        />
       </div>
+
+      {events.length === 0 ? (
+        <p className="text-center text-gray-500">
+          No events found
+        </p>
+      ) : (
+        <div className="grid md:grid-cols-3 gap-5">
+          {events.map(
+            (event) => (
+              <EventCard
+                key={
+                  event._id
+                }
+                event={event}
+              />
+            )
+          )}
+        </div>
+      )}
     </div>
   );
 }

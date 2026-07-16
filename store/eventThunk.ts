@@ -11,9 +11,14 @@ import {
 export const fetchEvents =
   createAsyncThunk(
     "events/fetchAll",
-    async (_, thunkAPI) => {
+    async (
+      search?: string,
+      thunkAPI
+    ) => {
       try {
-        return await getAllEvents();
+        return await getAllEvents(
+          search
+        );
       } catch (error: any) {
         return thunkAPI.rejectWithValue(
           error.response?.data?.message

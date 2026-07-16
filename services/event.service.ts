@@ -1,7 +1,17 @@
 import api from "./api";
 
-export const getAllEvents = async () => {
-  const response = await api.get("/events");
+export const getAllEvents = async (
+  search?: string
+) => {
+  const params: any = {};
+  
+  if (search && search.trim()) {
+    params.search = search.trim();
+  }
+  
+  const response = await api.get("/events", {
+    params,
+  });
 
   return response.data;
 };
