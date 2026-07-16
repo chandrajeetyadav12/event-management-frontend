@@ -12,7 +12,8 @@ export const fetchEvents =
   createAsyncThunk(
     "events/fetchAll",
     async (
-      search?: string,
+     
+      { search = "" }: { search?: string },
       thunkAPI
     ) => {
       try {

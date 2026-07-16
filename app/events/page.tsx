@@ -29,7 +29,7 @@ export default function EventsPage() {
     useState("");
 
   const debouncedSearch =
-    useDebounce(searchInput, 500);
+    useDebounce(searchInput, 1000);
 
   const {
     events,
@@ -40,12 +40,15 @@ export default function EventsPage() {
   );
 
   const delayedLoading =
-    useDelayedLoading(loading, 300);
+    useDelayedLoading(loading, 3000);
 
   useEffect(() => {
+
     dispatch(
-      fetchEvents(debouncedSearch)
-    );
+  fetchEvents({
+    search: debouncedSearch,
+  })
+);
   }, [dispatch, debouncedSearch]);
 
   if (delayedLoading) {
