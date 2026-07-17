@@ -29,7 +29,7 @@ export default function EventsPage() {
     useState("");
 
   const debouncedSearch =
-    useDebounce(searchInput, 1000);
+    useDebounce(searchInput, 500);
 
   const {
     events,
@@ -40,7 +40,7 @@ export default function EventsPage() {
   );
 
   const delayedLoading =
-    useDelayedLoading(loading, 3000);
+    useDelayedLoading(loading, 500);
 
   useEffect(() => {
 
