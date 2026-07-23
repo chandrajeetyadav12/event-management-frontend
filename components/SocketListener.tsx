@@ -2,7 +2,7 @@
 
 import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import socket from "@/hooks/useSocket";
+import { getSocket } from "@/hooks/useSocket";
 import { seatUpdated } from "@/store/eventSlice";
 import { addNewBooking } from "@/store/bookingSlice";
 import { AppDispatch, RootState } from "@/store/store";
@@ -12,6 +12,11 @@ export default function SocketListener() {
   const currentUser = useSelector((state: RootState) => state.auth.user);
 
   useEffect(() => {
+    if (typeof window === "undefined") return;
+
+    const socket = getSocket();
+    if (!socket) return;
+
     const handleConnect = () => {
       console.log("Connected:", socket.id);
     };

@@ -2,27 +2,41 @@
 
 import { io, Socket } from "socket.io-client";
 
-const socket: Socket = io(
-  process.env.NEXT_PUBLIC_SOCKET_URL || "http://localhost:5000",
-  {
-    transports: ["websocket", "polling"],
-    reconnection: true,
-    reconnectionAttempts: 10,
-    reconnectionDelay: 1000,
-  }
-);
-
+let socket: Socket | null = null;
 let activeRoomId: string | null = null;
 
 const rejoinActiveRoom = () => {
   if (!activeRoomId) return;
-  socket.emit("join-event", activeRoomId);
+
+  const socketInstance = getSocket();
+  if (!socketInstance) return;
+
+  socketInstance.emit("join-event", activeRoomId);
 };
 
-socket.on("connect", rejoinActiveRoom);
+export const getSocket = () => {
+  if (typeof window === "undefined") return null;
+
+  if (!socket) {
+    socket = io(process.env.NEXT_PUBLIC_SOCKET_URL || "http://localhost:5000", {
+      transports: ["websocket", "polling"],
+      reconnection: true,
+      reconnectionAttempts: 10,
+      reconnectionDelay: 1000,
+    });
+
+    socket.on("connect", rejoinActiveRoom);
+  }
+
+  return socket;
+};
 
 export const joinEventRoom = (eventId: string | string[] | undefined) => {
+  if (typeof window === "undefined") return;
   if (!eventId || typeof eventId !== "string") return;
+
+  const socketInstance = getSocket();
+  if (!socketInstance) return;
 
   if (activeRoomId === eventId) {
     rejoinActiveRoom();
@@ -30,7 +44,7 @@ export const joinEventRoom = (eventId: string | string[] | undefined) => {
   }
 
   if (activeRoomId) {
-    socket.emit("leave-event", activeRoomId);
+    socketInstance.emit("leave-event", activeRoomId);
   }
 
   activeRoomId = eventId;
@@ -38,12 +52,16 @@ export const joinEventRoom = (eventId: string | string[] | undefined) => {
 };
 
 export const leaveEventRoom = (eventId?: string | string[]) => {
+  if (typeof window === "undefined") return;
   if (!eventId || typeof eventId !== "string") return;
 
+  const socketInstance = getSocket();
+  if (!socketInstance) return;
+
   if (activeRoomId === eventId) {
-    socket.emit("leave-event", eventId);
+    socketInstance.emit("leave-event", eventId);
     activeRoomId = null;
   }
 };
 
-export default socket;
+export default getSocket;
